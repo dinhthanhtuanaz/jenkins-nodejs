@@ -1,0 +1,33 @@
+1. Cài đặt Jenkins bằng Docker
+docker run -d --name jenkins_v1 -p 8080:8080 -v E:\docker\jenkins\vol:/var/jenkins_home jenkins/jenkins:lts
+-> Down image bản Long term support, mapping volume vào thư mục (Sẽ sinh ra các data của jenkins)
+
+Vào localhost:8080, nhập password=
+Lấy pass ở log: docker logs container_id (VD container_id=66a28e4d3a6b, chạy docker logs 66), hoặc lấy ở file config initialAdminPassword
+
+Admin Account:
+tuandt/tuandt
+
+2. Tích hợp Jenkins với Github
+- Tạo repo github https://github.com/dinhthanhtuanaz/jenkins-nodejs
+Vào repo -> Chọn tab Settings -> Webhooks
+Payload URL: https://a1d7-42-112-184-29.ngrok-free.app/github-webhook/ (Phải có /github-webhook/)
+Mỗi khi push code, github gửi 1 request POST sang Jenkins
+- Tạo project trên jenkins
+Chọn item -> freestyle project
+Build Triggers chọn GitHub hook trigger for GITScm polling
+
+Mỗi lần push code, vào phần Recent Deliveries trên Github có các lần Deliveries, và check cả bên Jenkins cũng sẽ các lần build, có thể check Console log các lần build đó.
+VD: Console Output
+Started by GitHub push by dinhthanhtuanaz
+Running as SYSTEM
+Building in workspace /var/jenkins_home/workspace/jenkins-nodejs
+
+-> Lúc này mình có thể truy cập vào bash của Container Jenkins để xem nội dung thư mục jenkins-nodejs của mình.
+
+=> Đây chỉ là Jenkins khởi đầu theo kiểu Freestyle. Còn 1 cách khác là sử dụng Jenkins Pipeline (Sử dụng Jenkinsfile để khai báo các bước)
+=> Sử dụng GUI khai báo, phù hợp ít kịch bản
+
+3. Jenkins dạng Pipeline
+
+
